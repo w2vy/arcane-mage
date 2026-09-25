@@ -23,9 +23,16 @@ log = logging.getLogger(__name__)
 MIN_API_VERSION = "8.4.1"
 MIN_IMPORT_STORAGE_BYTES = 10 * 1024 * 1024  # 10 MiB
 
+# Memory sits just above what FluxOS benchmarks require, not at the nominal 8/32 GB, so the
+# host keeps RAM for itself. A 16 GB desktop with two 8 GB cumulus VMs (or a 32 GB host with a
+# 32 GB nimbus) is overcommitted and swaps to disk, and the benchmark's disk write then fails.
+# The guest reports about 3% less than it is given; measured 2026-09-25:
+#   cumulus: 7680 MB reports 7.3 (gate 7; 7168 MB reported 6.8 and failed)
+#   nimbus: 31744 MB reports 30.0 (gate 30; 31232 failed); 32000 keeps ~0.25 of margin
+# stratus is unmeasured and stays at 65536.
 TIER_CONFIG: dict[str, dict[str, int]] = {
-    "cumulus": {"memory_mb": 8192, "scsi_gb": 220, "cpu_cores": 4},
-    "nimbus": {"memory_mb": 32768, "scsi_gb": 440, "cpu_cores": 8},
+    "cumulus": {"memory_mb": 7680, "scsi_gb": 220, "cpu_cores": 4},
+    "nimbus": {"memory_mb": 32000, "scsi_gb": 440, "cpu_cores": 8},
     "stratus": {"memory_mb": 65536, "scsi_gb": 880, "cpu_cores": 16},
 }
 

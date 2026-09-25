@@ -159,7 +159,7 @@ class TestProvisionerValidation:
         assert config is not None
         assert config.vmid == 100
         assert config.name == "test-vm"
-        assert config.memory == 8192
+        assert config.memory == 7680
         assert config.cores == 4
 
     async def test_create_vm_config_tags_and_description(

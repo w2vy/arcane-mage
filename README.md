@@ -135,7 +135,7 @@ from arcane_mage import HashedPassword, TIER_CONFIG, get_latest_iso_version
 hashed = HashedPassword("my_password").hash()
 
 # Hardware tier specs (cumulus, nimbus, stratus)
-print(TIER_CONFIG["cumulus"])  # {'memory_mb': 8192, 'scsi_gb': 220, 'cpu_cores': 4}
+print(TIER_CONFIG["cumulus"])  # {'memory_mb': 7680, 'scsi_gb': 220, 'cpu_cores': 4}
 
 # Fetch latest FluxOS ISO version
 version = await get_latest_iso_version()
