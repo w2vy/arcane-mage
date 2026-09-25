@@ -162,6 +162,24 @@ class TestProvisionerValidation:
         assert config.memory == 8192
         assert config.cores == 4
 
+    async def test_create_vm_config_memory_override(
+        self, provisioner: Provisioner, mock_api: AsyncMock
+    ):
+        mock_api.get_next_id.return_value = ApiResponse(status=200, payload=100)
+
+        config = await provisioner.create_vm_config(
+            vm_name="test-vm",
+            tier="cumulus",
+            network_bridge="vmbr0",
+            memory_mb=7680,
+        )
+
+        assert config is not None
+        assert config.memory == 7680
+        # Only RAM moves; the rest of the tier is untouched.
+        assert config.cores == 4
+        assert config.scsi0.startswith("local-lvm:220,")
+
     async def test_create_vm_config_tags_and_description(
         self, provisioner: Provisioner, mock_api: AsyncMock
     ):

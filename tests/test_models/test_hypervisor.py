@@ -141,6 +141,12 @@ class TestHypervisor:
         with pytest.raises(ValidationError):
             Hypervisor(**hypervisor_dict)
 
+    def test_memory_mb_must_be_positive(self, hypervisor_dict: dict):
+        hypervisor_dict["memory_mb"] = 0
+
+        with pytest.raises(ValidationError):
+            Hypervisor(**hypervisor_dict)
+
     def test_to_dict_roundtrip(self, hypervisor_dict: dict):
         hyper = Hypervisor(**hypervisor_dict)
         result = hyper.to_dict()
@@ -155,6 +161,7 @@ class TestHypervisor:
         hypervisor_dict["vm_id"] = 100
         hypervisor_dict["startup_config"] = "order=1"
         hypervisor_dict["disk_limit"] = 50
+        hypervisor_dict["memory_mb"] = 7680
         hypervisor_dict["cpu_limit"] = 2.0
         hypervisor_dict["network_limit"] = 100
         hypervisor_dict["start_on_creation"] = True
@@ -166,6 +173,7 @@ class TestHypervisor:
         assert hyper.vm_id == 100
         assert hyper.startup_config == "order=1"
         assert hyper.disk_limit == 50
+        assert hyper.memory_mb == 7680
         assert hyper.cpu_limit == 2.0
         assert hyper.network_limit == 100
         assert hyper.start_on_creation is True
